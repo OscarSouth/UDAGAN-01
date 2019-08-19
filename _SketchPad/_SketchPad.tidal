@@ -1,0 +1,88 @@
+(keySig,v,c,b) = (
+  E \\\ aeolian
+  ,(f vTheme, f vHarm, 0) :: Section
+  ,(f cTheme, f cHarm, 1) :: Section
+  ,(f bTheme, f bHarm, 2) :: Section
+  )
+    where
+      f a =
+        let func = cat
+         in (func $ fst a, func $ snd a)
+      vTheme = ([ -- VERSE THEME
+        "0",
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      vHarm = ([ -- VERSE HARMONY
+        "0", "4 2", "3", "5 4"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      cTheme = ([ -- CHORUS THEME
+        "0",
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      cHarm = ([ -- CHORUS HARMONY
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      bTheme = ([ -- BREAK THEME
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+      bHarm = ([ -- BREAK HARMONY
+        "0"
+        ],[ -- TRANSPOSE
+        "0"
+        ])
+
+p08 p0 p1 p2 = d08 $ do
+  let (motion, prog) = (snd' p0, inKey p1)
+  id $
+    stack [silence
+      ,phrase 2 "mp ~!3"
+      -- ,phrase 1 "mp"
+      ,modwheel 0.01
+      ] |* vel p2 #ch 08
+        -- |+ note 12
+        |+| prog 4 (fst motion
+         -- +| "[<12 11 10 9> 0 0 0]*8"
+         -- +| "[0 0 0 <2 -3>]*8"
+         -- +| "0*32"
+          ) |+ note (snd motion)
+      -- >> silence
+
+p09 p0 = d09 $ do
+  id $
+    fast 2 $
+    stack [silence
+      -- ,ruismk minim "sb"
+      -- ,ruismk 1 "~ cp"
+      -- ,ruismk minim "~ hh"
+      ] |* vel p0 #ch 09
+      -- >> silence
+
+p12 p0 p1 p2 = d12 $ do
+  let (motion, prog) = (snd' p0, inKey p1)
+  let lfo1 = slow 5 $ 0.5 <~ lfo sine 0.01 0.11
+  id $
+    stack [silence
+      ,slow 2 $ phrase 1 "mp"
+      ,modwheel 0.0
+      ] |* vel p2 #ch 12
+        |- note 12
+        |+| prog 4 (fst motion
+         +| "[4,9,14]"
+          ) |+ note (snd motion)
+      -- >> silence
+
+hush
+
+runWith allegro
+
+hush''
